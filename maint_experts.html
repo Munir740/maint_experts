@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خبراء الصيانة الإلكترونية | Electronic Maintenance Experts</title>
+    <meta name="description" content="شركة خبراء الصيانة الإلكترونية - صيانة جميع الأجهزة الإلكترونية والكهربائية بأعلى معايير الجودة">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'cairo': ['Cairo', 'sans-serif'] },
+                    colors: {
+                        primary: { 50: '#e0f2fe', 100: '#bae6fd', 200: '#7dd3fc', 300: '#38bdf8', 400: '#0ea5e9', 500: '#0284c7', 600: '#0369a1', 700: '#075985', 800: '#0c4a6e', 900: '#082f49' },
+                        accent: { 400: '#facc15', 500: '#eab308', 600: '#ca8a04' },
+                        dark: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { scroll-behavior: smooth; }
+        body { font-family: 'Cairo', sans-serif; }
+        .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); }
+        .glass-dark { background: rgba(15,23,42,0.9); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .gradient-text { background: linear-gradient(135deg, #0ea5e9, #facc15); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #0c4a6e 100%); }
+        .card-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); }
+        .pulse-ring { animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(14,165,233,0.5); } 70% { box-shadow: 0 0 0 20px rgba(14,165,233,0); } 100% { box-shadow: 0 0 0 0 rgba(14,165,233,0); } }
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; right: 0; width: 0; height: 2px; background: #facc15; transition: width 0.3s ease; }
+        .nav-link:hover::after { width: 100%; }
+        .btn-primary { background: linear-gradient(135deg, #0ea5e9, #0284c7); transition: all 0.3s ease; }
+        .btn-primary:hover { background: linear-gradient(135deg, #0284c7, #0369a1); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(14,165,233,0.3); }
+        .btn-accent { background: linear-gradient(135deg, #facc15, #eab308); transition: all 0.3s ease; }
+        .btn-accent:hover { background: linear-gradient(135deg, #eab308, #ca8a04); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(250,204,21,0.3); }
+        .grid-pattern { background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 30px 30px; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.25; }
+        .counter { font-variant-numeric: tabular-nums; }
+        .service-card:hover .service-icon { transform: scale(1.1) rotate(5deg); color: #facc15; }
+        .service-icon { transition: all 0.3s ease; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #0ea5e9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+        .marquee-track { animation: marquee 30s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    </style>
+</head>
+<body class="bg-dark-900 text-white overflow-x-hidden font-cairo">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // SVG Icons
+        const Icon = ({ name, className = "w-6 h-6" }) => {
+            const icons = {
+                Wrench: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>,
+                Phone: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+                Mail: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path strokeLinecap="round" strokeLinejoin="round" d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>,
+                MapPin: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>,
+                Menu: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>,
+                X: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M18 6 6 18"/><path strokeLinecap="round" strokeLinejoin="round" d="m6 6 12 12"/></svg>,
+                ChevronDown: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6"/></svg>,
+                Star: <svg className={className} fill="currentColor" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+                Shield: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+                Clock: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+                Zap: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+                Award: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>,
+                Users: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path strokeLinecap="round" strokeLinejoin="round" d="M22 21v-2a4 4 0 0 0-3-3.87"/><path strokeLinecap="round" strokeLinejoin="round" d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+                CheckCircle: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
+                ArrowUp: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m18 15-6-6-6 6"/></svg>,
+                Facebook: <svg className={className} fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>,
+                WhatsApp: <svg className={className} fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.3A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>,
+                Instagram: <svg className={className} fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>,
+                Tv: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>,
+                Cpu: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 2v2"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 20v2"/><path strokeLinecap="round" strokeLinejoin="round" d="M2 15h2"/><path strokeLinecap="round" strokeLinejoin="round" d="M2 9h2"/><path strokeLinecap="round" strokeLinejoin="round" d="M20 15h2"/><path strokeLinecap="round" strokeLinejoin="round" d="M20 9h2"/><path strokeLinecap="round" strokeLinejoin="round" d="M9 2v2"/><path strokeLinecap="round" strokeLinejoin="round" d="M9 20v2"/></svg>,
+                Smartphone: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01"/></svg>,
+                Monitor: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>,
+                Speaker: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2"/><circle cx="12" cy="14" r="4"/><line x1="12" x2="12.01" y1="6" y2="6"/></svg>,
+                Headphones: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 14v3a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4"/><path strokeLinecap="round" strokeLinejoin="round" d="M21 14v3a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/><path strokeLinecap="round" strokeLinejoin="round" d="M3 10a9 9 0 0 1 18 0"/></svg>,
+                Printer: <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path strokeLinecap="round" strokeLinejoin="round" d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>,
+            };
+            return icons[name] || null;
+        };
+
+        // Intersection Observer Hook
+        function useInView() {
+            const [isVisible, setIsVisible] = useState(false);
+            const ref = useRef(null);
+            useEffect(() => {
+                const observer = new IntersectionObserver(([entry]) => {
+                    if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); }
+                }, { threshold: 0.1 });
+                if (ref.current) observer.observe(ref.current);
+                return () => observer.disconnect();
+            }, []);
+            return [ref, isVisible];
+        }
+
+        // Animated Counter
+        function AnimatedCounter({ end, suffix = '', duration = 2000 }) {
+            const [count, setCount] = useState(0);
+            const [ref, isVisible] = useInView();
+            const animated = useRef(false);
+            useEffect(() => {
+                if (isVisible && !animated.current) {
+                    animated.current = true;
+                    let start = null;
+                    const step = (ts) => {
+                        if (!start) start = ts;
+                        const p = Math.min((ts - start) / duration, 1);
+                        setCount(Math.floor(p * end));
+                        if (p < 1) requestAnimationFrame(step);
+                    };
+                    requestAnimationFrame(step);
+                }
+            }, [isVisible]);
+            return <span ref={ref} className="counter">{count}{suffix}</span>;
+        }
+
+        // Navigation
+        function Navigation() {
+            const [scrolled, setScrolled] = useState(false);
+            const [mobileOpen, setMobileOpen] = useState(false);
+            const [active, setActive] = useState('home');
+
+            useEffect(() => {
+                const onScroll = () => {
+                    setScrolled(window.scrollY > 50);
+                    const sections = ['home','about','services','stats','testimonials','contact'];
+                    for (const s of sections.reverse()) {
+                        const el = document.getElementById(s);
+                        if (el && el.getBoundingClientRect().top <= 150) { setActive(s); break; }
+                    }
+                };
+                window.addEventListener('scroll', onScroll);
+                return () => window.removeEventListener('scroll', onScroll);
+            }, []);
+
+            const links = [
+                { id: 'home', label: 'الرئيسية' },
+                { id: 'about', label: 'من نحن' },
+                { id: 'services', label: 'خدماتنا' },
+                { id: 'stats', label: 'إنجازاتنا' },
+                { id: 'testimonials', label: 'آراء العملاء' },
+                { id: 'contact', label: 'تواصل معنا' },
+            ];
+
+            const scrollTo = (id) => {
+                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+                setMobileOpen(false);
+            };
+
+            return (
+                <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'glass-dark shadow-2xl py-3' : 'bg-transparent py-5'}`}>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollTo('home')}>
+                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-lg">
+                                    <Icon name="Wrench" className="w-6 h-6" />
+                                </div>
+                                <div className="hidden sm:block">
+                                    <h1 className="text-xl font-bold gradient-text">خبراء الصيانة</h1>
+                                    <p className="text-xs text-dark-400">Electronic Maintenance Experts</p>
+                                </div>
+                            </div>
+
+                            <div className="hidden lg:flex items-center gap-8">
+                                {links.map(l => (
+                                    <button key={l.id} onClick={() => scrollTo(l.id)} className={`nav-link text-sm font-semibold transition-colors ${active === l.id ? 'text-primary-400' : 'text-dark-300 hover:text-white'}`}>
+                                        {l.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                                <a href="tel:+966500000000" className="hidden md:flex items-center gap-2 btn-primary px-5 py-2.5 rounded-full text-sm font-bold">
+                                    <Icon name="Phone" className="w-4 h-4" />
+                                    <span>اتصل الآن</span>
+                                </a>
+                                <button className="lg:hidden p-2 rounded-lg hover:bg-dark-800 transition-colors" onClick={() => setMobileOpen(!mobileOpen)}>
+                                    {mobileOpen ? <Icon name="X" className="w-6 h-6" /> : <Icon name="Menu" className="w-6 h-6" />}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={`lg:hidden transition-all duration-500 overflow-hidden ${mobileOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                        <div className="glass-dark mx-4 mt-2 rounded-2xl p-6 space-y-4">
+                            {links.map(l => (
+                                <button key={l.id} onClick={() => scrollTo(l.id)} className={`block w-full text-right py-2 px-4 rounded-lg transition-colors ${active === l.id ? 'bg-primary-500/20 text-primary-400' : 'text-dark-300 hover:bg-dark-800'}`}>
+                                    {l.label}
+                                </button>
+                            ))}
+                            <a href="tel:+966500000000" className="flex items-center justify-center gap-2 btn-primary px-5 py-3 rounded-full text-sm font-bold w-full mt-4">
+                                <Icon name="Phone" className="w-4 h-4" />
+                                <span>اتصل الآن</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            );
+        }
+
+        // Hero Section
+        function HeroSection() {
+            const [ref, isVisible] = useInView();
+            return (
+                <section id="home" className="relative min-h-screen flex items-center justify-center hero-gradient overflow-hidden grid-pattern">
+                    <div className="blob bg-primary-500 w-96 h-96 top-0 right-0"></div>
+                    <div className="blob bg-accent-500 w-72 h-72 bottom-0 left-0"></div>
+                    <div className="blob bg-purple-500 w-64 h-64 top-1/2 left-1/2" style={{transform: 'translate(-50%, -50%)'}}></div>
+
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
+                        <div ref={ref} className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                            <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8">
+                                <span className="w-2 h-2 rounded-full bg-green-400 pulse-ring"></span>
+                                <span className="text-sm text-dark-300">نحن متواجدون لخدمتك على مدار الساعة</span>
+                            </div>
+
+                            <h1 className="text-5xl sm:text-6xl lg:text-8xl font-black mb-6 leading-tight">
+                                <span className="block text-white">خبراء</span>
+                                <span className="block gradient-text">الصيانة الإلكترونية</span>
+                            </h1>
+
+                            <p className="text-lg sm:text-xl text-dark-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+                                نقدم حلولاً متكاملة لصيانة جميع الأجهزة الإلكترونية والكهربائية بأعلى معايير الجودة والاحترافية
+                            </p>
+
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+                                <button onClick={() => document.getElementById('services').scrollIntoView({behavior:'smooth'})} className="btn-primary px-8 py-4 rounded-full text-lg font-bold flex items-center justify-center gap-2">
+                                    <Icon name="Wrench" className="w-5 h-5" />
+                                    <span>استكشف خدماتنا</span>
+                                </button>
+                                <a href="https://wa.me/966500000000" target="_blank" className="btn-accent px-8 py-4 rounded-full text-lg font-bold text-dark-900 flex items-center justify-center gap-2">
+                                    <Icon name="WhatsApp" className="w-5 h-5" />
+                                    <span>تواصل عبر واتساب</span>
+                                </a>
+                            </div>
+
+                            <div className="flex flex-wrap justify-center gap-8 text-dark-400">
+                                <div className="flex items-center gap-2"><Icon name="CheckCircle" className="w-5 h-5 text-primary-400" /><span>ضمان على جميع الإصلاحات</span></div>
+                                <div className="flex items-center gap-2"><Icon name="CheckCircle" className="w-5 h-5 text-primary-400" /><span>صيانة في المنزل</span></div>
+                                <div className="flex items-center gap-2"><Icon name="CheckCircle" className="w-5 h-5 text-primary-400" /><span>أسعار تنافسية</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+                        <Icon name="ChevronDown" className="w-6 h-6 text-dark-400" />
+                    </div>
+                </section>
+            );
+        }
+
+        // About Section
+        function AboutSection() {
+            const [ref, isVisible] = useInView();
+            const features = [
+                { icon: 'Shield', title: 'ضمان شامل', desc: 'نقدم ضماناً على جميع أعمال الصيانة والإصلاح' },
+                { icon: 'Clock', title: 'سرعة في الأداء', desc: 'نلتزم بمواعيد التسليم ونحرص على السرعة' },
+                { icon: 'Award', title: 'خبرة عشر سنوات', desc: 'سنوات من الخبرة في مجال الصيانة الإلكترونية' },
+                { icon: 'Users', title: 'فريق متخصص', desc: 'مهندسون وفنيون معتمدون على أعلى مستوى' },
+            ];
+
+            return (
+                <section id="about" className="py-24 bg-dark-900 relative overflow-hidden">
+                    <div className="blob bg-primary-500/20 w-80 h-80 -top-20 -right-20"></div>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div ref={ref} className={`grid lg:grid-cols-2 gap-16 items-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                            <div className="relative">
+                                <div className="absolute -inset-4 bg-gradient-to-r from-primary-500 to-accent-500 rounded-3xl opacity-20 blur-xl"></div>
+                                <div className="relative bg-dark-800 rounded-3xl p-8 border border-dark-700">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {features.map((f, i) => (
+                                            <div key={i} className="bg-dark-900/50 rounded-2xl p-6 text-center card-hover">
+                                                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 flex items-center justify-center text-primary-400">
+                                                    <Icon name={f.icon} className="w-7 h-7" />
+                                                </div>
+                                                <h3 className="font-bold text-lg mb-2">{f.title}</h3>
+                                                <p className="text-sm text-dark-400">{f.desc}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <span className="text-primary-400 font-bold text-sm tracking-wider uppercase mb-4 block">من نحن</span>
+                                <h2 className="text-4xl sm:text-5xl font-black mb-6 leading-tight">
+                                    نحن <span className="gradient-text">خبراء</span> في عالم الصيانة الإلكترونية
+                                </h2>
+                                <p className="text-dark-300 text-lg leading-relaxed mb-6">
+                                    شركة خبراء الصيانة الإلكترونية تأسست بهدف تقديم خدمات صيانة احترافية للأجهزة الإلكترونية والكهربائية. نحن نؤمن بأن الجودة والاحترافية هما أساس نجاح أي عمل.
+                                </p>
+                                <p className="text-dark-300 text-lg leading-relaxed mb-8">
+                                    نستخدم أحدث التقنيات والأدوات في عمليات الصيانة، ونلتزم بأعلى معايير الجودة العالمية. سواء كنت بحاجة لصيانة جهازك في المنزل أو في ورشتنا المتخصصة، نحن هنا لخدمتك.
+                                </p>
+                                <div className="flex flex-wrap gap-4">
+                                    <div className="flex items-center gap-2 text-primary-400"><Icon name="CheckCircle" className="w-5 h-5" /><span className="font-semibold">أجزاء أصلية</span></div>
+                                    <div className="flex items-center gap-2 text-primary-400"><Icon name="CheckCircle" className="w-5 h-5" /><span className="font-semibold">تقنيات حديثة</span></div>
+                                    <div className="flex items-center gap-2 text-primary-400"><Icon name="CheckCircle" className="w-5 h-5" /><span className="font-semibold">دعم فني 24/7</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Services Section
+        function ServicesSection() {
+            const [ref, isVisible] = useInView();
+            const [activeService, setActiveService] = useState(0);
+
+            const services = [
+                { icon: 'Tv', title: 'صيانة التلفزيونات', desc: 'إصلاح جميع أنواع الشاشات LED وLCD وSmart TV مع ضمان شامل', color: 'from-blue-500 to-cyan-500' },
+                { icon: 'Cpu', title: 'صيانة اللوحات الأم', desc: 'تشخيص وإصلاح أعطال اللوحات الإلكترونية والدوائر الكهربائية', color: 'from-purple-500 to-pink-500' },
+                { icon: 'Smartphone', title: 'صيانة الجوالات', desc: 'تغيير الشاشات والبطاريات وإصلاح أعطال الهاردوير والسوفتوير', color: 'from-green-500 to-emerald-500' },
+                { icon: 'Monitor', title: 'صيانة الكمبيوترات', desc: 'صيانة أجهزة الكمبيوتر المكتبية والمحمولة وترقية القطع', color: 'from-orange-500 to-red-500' },
+                { icon: 'Speaker', title: 'صيانة السماعات', desc: 'إصلاح أنظمة الصوت المنزلية والمحمولة مع ضمان على الجودة', color: 'from-yellow-500 to-amber-500' },
+                { icon: 'Headphones', title: 'سماعات لاسلكية', desc: 'إصلاح سماعات البلوتوث والسماعات الرياضية بأعلى جودة', color: 'from-indigo-500 to-violet-500' },
+                { icon: 'Printer', title: 'صيانة الطابعات', desc: 'تنظيف وإصلاح جميع أنواع الطابعات والحبر مع صيانة دورية', color: 'from-teal-500 to-cyan-500' },
+                { icon: 'Zap', title: 'أجهزة كهربائية', desc: 'إصلاح الأجهزة المنزلية الكهربائية بجميع أنواعها وأحجامها', color: 'from-rose-500 to-pink-500' },
+            ];
+
+            return (
+                <section id="services" className="py-24 bg-dark-800 relative">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div ref={ref} className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                            <span className="text-primary-400 font-bold text-sm tracking-wider uppercase mb-4 block">خدماتنا</span>
+                            <h2 className="text-4xl sm:text-5xl font-black mb-6">
+                                نقدم <span className="gradient-text">حلولاً شاملة</span> لجميع أجهزتك
+                            </h2>
+                            <p className="text-dark-300 text-lg max-w-2xl mx-auto">
+                                فريقنا المتخصص جاهز لصيانة وإصلاح جميع أنواع الأجهزة الإلكترونية بأعلى معايير الجودة
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {services.map((s, i) => (
+                                <div key={i} className={`service-card group relative bg-dark-900 rounded-2xl p-6 border border-dark-700 card-hover cursor-pointer ${activeService === i ? 'border-primary-500/50' : ''}`} onClick={() => setActiveService(i)}>
+                                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center mb-5 service-icon`}>
+                                        <Icon name={s.icon} className="w-7 h-7" />
+                                    </div>
+                                    <h3 className="text-xl font-bold mb-3 group-hover:text-primary-400 transition-colors">{s.title}</h3>
+                                    <p className="text-dark-400 text-sm leading-relaxed">{s.desc}</p>
+                                    <div className="mt-5 flex items-center gap-2 text-primary-400 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <span>اطلب الخدمة</span>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/></svg>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Stats Section
+        function StatsSection() {
+            const [ref, isVisible] = useInView();
+            const stats = [
+                { icon: 'Users', value: 5000, suffix: '+', label: 'عميل راضٍ' },
+                { icon: 'Wrench', value: 15000, suffix: '+', label: 'عملية صيانة' },
+                { icon: 'Award', value: 10, suffix: '+', label: 'سنوات خبرة' },
+                { icon: 'Shield', value: 98, suffix: '%', label: 'نسبة الرضا' },
+            ];
+
+            return (
+                <section id="stats" className="py-24 hero-gradient relative grid-pattern">
+                    <div className="blob bg-primary-500/30 w-96 h-96 top-0 left-0"></div>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                        <div ref={ref} className={`grid grid-cols-2 lg:grid-cols-4 gap-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                            {stats.map((s, i) => (
+                                <div key={i} className="text-center">
+                                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 flex items-center justify-center text-primary-400">
+                                        <Icon name={s.icon} className="w-8 h-8" />
+                                    </div>
+                                    <div className="text-4xl sm:text-5xl font-black gradient-text mb-2">
+                                        <AnimatedCounter end={s.value} suffix={s.suffix} />
+                                    </div>
+                                    <p className="text-dark-300 font-semibold">{s.label}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Testimonials Section
+        function TestimonialsSection() {
+            const [ref, isVisible] = useInView();
+            const [currentIndex, setCurrentIndex] = useState(0);
+
+            const testimonials = [
+                { name: 'أحمد محمد', role: 'صاحب شركة', text: 'خدمة ممتازة وسرعة في الإنجاز. أصلحوا لي شاشة التلفزيون في نفس اليوم وبسعر مناسب جداً. أنصح بالتعامل معهم بشدة.', rating: 5 },
+                { name: 'سارة عبدالله', role: 'مهندسة', text: 'أفضل شركة صيانة تعاملت معها. الفريق محترف جداً والضمان المقدم يعطي راحة بال كبيرة. شكراً لكم على جهودكم المتميزة.', rating: 5 },
+                { name: 'خالد العمري', role: 'مدير مدرسة', text: 'قاموا بصيانة جميع أجهزة الكمبيوتر في المدرسة بكفاءة عالية. العمل نظيف ومنظم والأسعار شفافة تماماً.', rating: 5 },
+                { name: 'فاطمة الزهراء', role: 'طبيبة', text: 'صيانة سريعة وجودة عالية. أصلحوا لي جهازي اللوحي في وقت قياسي. سأكون عميلة دائمة لديهم بالتأكيد.', rating: 5 },
+            ];
+
+            useEffect(() => {
+                const timer = setInterval(() => setCurrentIndex(p => (p + 1) % testimonials.length), 5000);
+                return () => clearInterval(timer);
+            }, []);
+
+            return (
+                <section id="testimonials" className="py-24 bg-dark-900 relative overflow-hidden">
+                    <div className="blob bg-accent-500/10 w-96 h-96 -bottom-20 -right-20"></div>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div ref={ref} className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                            <span className="text-primary-400 font-bold text-sm tracking-wider uppercase mb-4 block">آراء العملاء</span>
+                            <h2 className="text-4xl sm:text-5xl font-black mb-6">
+                                ما يقوله <span className="gradient-text">عملاؤنا</span> عنا
+                            </h2>
+                        </div>
+
+                        <div className="relative max-w-4xl mx-auto">
+                            <div className="overflow-hidden">
+                                <div className="flex transition-transform duration-700 ease-out" style={{ transform: `translateX(${currentIndex * 100}%)` }}>
+                                    {testimonials.map((t, i) => (
+                                        <div key={i} className="w-full flex-shrink-0 px-4">
+                                            <div className="bg-dark-800 rounded-3xl p-8 sm:p-12 border border-dark-700 relative card-hover">
+                                                <div className="absolute top-6 left-6 text-primary-500/20">
+                                                    <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                                                </div>
+                                                <div className="flex gap-1 mb-6">
+                                                    {[...Array(t.rating)].map((_, j) => (
+                                                        <span key={j} className="text-accent-400"><Icon name="Star" className="w-5 h-5" /></span>
+                                                    ))}
+                                                </div>
+                                                <p className="text-lg sm:text-xl text-dark-200 leading-relaxed mb-8">{t.text}</p>
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xl font-bold">
+                                                        {t.name[0]}
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-bold text-lg">{t.name}</h4>
+                                                        <p className="text-dark-400 text-sm">{t.role}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="flex justify-center gap-3 mt-8">
+                                {testimonials.map((_, i) => (
+                                    <button key={i} onClick={() => setCurrentIndex(i)} className={`w-3 h-3 rounded-full transition-all duration-300 ${currentIndex === i ? 'bg-primary-400 w-8' : 'bg-dark-600 hover:bg-dark-500'}`} />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Contact Section
+        function ContactSection() {
+            const [ref, isVisible] = useInView();
+            const [formData, setFormData] = useState({ name: '', phone: '', device: '', message: '' });
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [submitted, setSubmitted] = useState(false);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                setTimeout(() => {
+                    setIsSubmitting(false);
+                    setSubmitted(true);
+                    setFormData({ name: '', phone: '', device: '', message: '' });
+                    setTimeout(() => setSubmitted(false), 3000);
+                }, 1500);
+            };
+
+            const contactInfo = [
+                { icon: 'Phone', title: 'اتصل بنا', value: '+966 50 000 0000', href: 'tel:+966500000000' },
+                { icon: 'WhatsApp', title: 'واتساب', value: '+966 50 000 0000', href: 'https://wa.me/966500000000' },
+                { icon: 'Mail', title: 'البريد الإلكتروني', value: 'info@experts-repair.com', href: 'mailto:info@experts-repair.com' },
+                { icon: 'MapPin', title: 'العنوان', value: 'الرياض، المملكة العربية السعودية', href: '#' },
+            ];
+
+            return (
+                <section id="contact" className="py-24 bg-dark-800 relative">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div ref={ref} className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                            <span className="text-primary-400 font-bold text-sm tracking-wider uppercase mb-4 block">تواصل معنا</span>
+                            <h2 className="text-4xl sm:text-5xl font-black mb-6">
+                                جاهزون <span className="gradient-text">لخدمتك</span> في أي وقت
+                            </h2>
+                            <p className="text-dark-300 text-lg max-w-2xl mx-auto">
+                                لا تتردد في التواصل معنا لأي استفسار أو طلب صيانة. فريقنا جاهز لمساعدتك على مدار الساعة
+                            </p>
+                        </div>
+
+                        <div className="grid lg:grid-cols-2 gap-12">
+                            <div className="space-y-6">
+                                {contactInfo.map((info, i) => (
+                                    <a key={i} href={info.href} target={info.href.startsWith('http') ? '_blank' : undefined} className="flex items-center gap-5 bg-dark-900 rounded-2xl p-6 border border-dark-700 card-hover group">
+                                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 flex items-center justify-center text-primary-400 group-hover:from-primary-500 group-hover:to-primary-600 group-hover:text-white transition-all">
+                                            <Icon name={info.icon} className="w-7 h-7" />
+                                        </div>
+                                        <div>
+                                            <p className="text-dark-400 text-sm mb-1">{info.title}</p>
+                                            <p className="font-bold text-lg group-hover:text-primary-400 transition-colors">{info.value}</p>
+                                        </div>
+                                    </a>
+                                ))}
+
+                                <div className="bg-dark-900 rounded-2xl p-6 border border-dark-700">
+                                    <h3 className="font-bold text-xl mb-4">ساعات العمل</h3>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between text-dark-300"><span>السبت - الخميس</span><span className="font-semibold">8:00 ص - 10:00 م</span></div>
+                                        <div className="flex justify-between text-dark-300"><span>الجمعة</span><span className="font-semibold">4:00 م - 10:00 م</span></div>
+                                        <div className="flex justify-between text-primary-400"><span>الخدمة الطارئة</span><span className="font-semibold">24 ساعة</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-dark-900 rounded-3xl p-8 border border-dark-700">
+                                <h3 className="font-bold text-2xl mb-6">اطلب صيانة الآن</h3>
+                                <form onSubmit={handleSubmit} className="space-y-5">
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2 text-dark-300">الاسم الكامل</label>
+                                        <input type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-dark-800 border border-dark-600 rounded-xl px-5 py-3 text-white focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all" placeholder="أدخل اسمك الكامل" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2 text-dark-300">رقم الجوال</label>
+                                        <input type="tel" required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full bg-dark-800 border border-dark-600 rounded-xl px-5 py-3 text-white focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all" placeholder="05xxxxxxxx" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2 text-dark-300">نوع الجهاز</label>
+                                        <select required value={formData.device} onChange={e => setFormData({...formData, device: e.target.value})} className="w-full bg-dark-800 border border-dark-600 rounded-xl px-5 py-3 text-white focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all">
+                                            <option value="">اختر نوع الجهاز</option>
+                                            <option value="tv">تلفزيون / شاشة</option>
+                                            <option value="phone">جوال / تابلت</option>
+                                            <option value="computer">كمبيوتر / لابتوب</option>
+                                            <option value="audio">سماعات / أجهزة صوت</option>
+                                            <option value="printer">طابعة / ماسح ضوئي</option>
+                                            <option value="other">جهاز آخر</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2 text-dark-300">وصف المشكلة</label>
+                                        <textarea rows="4" value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} className="w-full bg-dark-800 border border-dark-600 rounded-xl px-5 py-3 text-white focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all resize-none" placeholder="اشرح المشكلة التي تواجهك بالتفصيل..." />
+                                    </div>
+                                    <button type="submit" disabled={isSubmitting} className="w-full btn-primary py-4 rounded-xl text-lg font-bold flex items-center justify-center gap-2 disabled:opacity-50">
+                                        {isSubmitting ? (
+                                            <span className="animate-spin w-6 h-6 border-2 border-white border-t-transparent rounded-full"></span>
+                                        ) : submitted ? (
+                                            <><Icon name="CheckCircle" className="w-5 h-5" /><span>تم الإرسال بنجاح!</span></>
+                                        ) : (
+                                            <><Icon name="Wrench" className="w-5 h-5" /><span>إرسال طلب الصيانة</span></>
+                                        )}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Footer
+        function Footer() {
+            const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+            return (
+                <footer className="bg-dark-900 border-t border-dark-800 pt-16 pb-8">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                            <div>
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                                        <Icon name="Wrench" className="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold gradient-text">خبراء الصيانة</h3>
+                                        <p className="text-xs text-dark-400">Electronic Maintenance Experts</p>
+                                    </div>
+                                </div>
+                                <p className="text-dark-400 leading-relaxed mb-6">
+                                    نقدم خدمات صيانة احترافية للأجهزة الإلكترونية والكهربائية بأعلى معايير الجودة والكفاءة.
+                                </p>
+                                <div className="flex gap-3">
+                                    <a href="https://www.facebook.com/profile.php?id=61577263203594" target="_blank" className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-dark-400 hover:bg-primary-500 hover:text-white transition-all">
+                                        <Icon name="Facebook" className="w-5 h-5" />
+                                    </a>
+                                    <a href="https://wa.me/966500000000" target="_blank" className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-dark-400 hover:bg-green-500 hover:text-white transition-all">
+                                        <Icon name="WhatsApp" className="w-5 h-5" />
+                                    </a>
+                                    <a href="#" className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-dark-400 hover:bg-pink-500 hover:text-white transition-all">
+                                        <Icon name="Instagram" className="w-5 h-5" />
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 className="font-bold text-lg mb-6">روابط سريعة</h4>
+                                <ul className="space-y-3">
+                                    {['الرئيسية','من نحن','خدماتنا','آراء العملاء','تواصل معنا'].map((l, i) => (
+                                        <li key={i}><button onClick={() => document.getElementById(['home','about','services','testimonials','contact'][i]).scrollIntoView({behavior:'smooth'})} className="text-dark-400 hover:text-primary-400 transition-colors">{l}</button></li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="font-bold text-lg mb-6">خدماتنا</h4>
+                                <ul className="space-y-3">
+                                    {['صيانة التلفزيونات','صيانة الجوالات','صيانة الكمبيوترات','صيانة السماعات','صيانة الطابعات'].map((l, i) => (
+                                        <li key={i}><span className="text-dark-400">{l}</span></li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="font-bold text-lg mb-6">النشرة البريدية</h4>
+                                <p className="text-dark-400 mb-4">اشترك للحصول على أحدث العروض والخدمات</p>
+                                <div className="flex gap-2">
+                                    <input type="email" placeholder="بريدك الإلكتروني" className="flex-1 bg-dark-800 border border-dark-700 rounded-lg px-4 py-2 text-white focus:border-primary-500 focus:outline-none text-sm" />
+                                    <button className="btn-primary px-4 py-2 rounded-lg"><Icon name="Mail" className="w-5 h-5" /></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-dark-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                            <p className="text-dark-500 text-sm">جميع الحقوق محفوظة © 2025 خبراء الصيانة الإلكترونية</p>
+                            <button onClick={scrollToTop} className="w-12 h-12 rounded-full bg-dark-800 flex items-center justify-center text-dark-400 hover:bg-primary-500 hover:text-white transition-all">
+                                <Icon name="ArrowUp" className="w-5 h-5" />
+                            </button>
+                        </div>
+                    </div>
+                </footer>
+            );
+        }
+
+        // Main App
+        function App() {
+            return (
+                <div className="min-h-screen bg-dark-900">
+                    <Navigation />
+                    <HeroSection />
+                    <AboutSection />
+                    <ServicesSection />
+                    <StatsSection />
+                    <TestimonialsSection />
+                    <ContactSection />
+                    <Footer />
+                </div>
+            );
+        }
+
+        // Render
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
